@@ -12,7 +12,6 @@ class LogManager(object):
 
         try:
 
-            log = logging.getLogger(__name__)
             log.setLevel(logging.INFO)
 
             # create a file handler
