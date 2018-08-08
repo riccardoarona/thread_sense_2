@@ -94,7 +94,8 @@ class ConfigManager(object):
         return diff
 
     def get_channel_list(self):
-        channels = self.config.get("channels", None)
+        channels = {}
+        channels = self.config.get("acquisition", {}).get("channels", [])
         if (channels is None):
             log_mgr.warning("Configured channel list is empty!")
             return []
