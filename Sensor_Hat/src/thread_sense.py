@@ -16,7 +16,7 @@ class MainClass(object):
         global cfg_mgr
 
         self.channel_list = None
-        log_mgr.fatal("initialization")
+        log_mgr.info("initialization")
 
         cfg_mgr.load_config()
         self.channel_list = cfg_mgr.get_channel_list

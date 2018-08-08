@@ -22,20 +22,23 @@ class ConfigManager(object):
         try:
             with open(config_file, 'r') as f:
                 if self.config is None:
+                    log_mgr.info("Config initialization")
                     self.config = self.ordered(json.load(f))
                     return True
 
-                config_new = json.load(f)
-                #config_new = self.ordered(config_new)
+                config_new = self.ordered(json.load(f))
 
         except:
             print "Configuration load error:", sys.exc_info()[0]
             raise
 
         if (self.config == config_new):
+            log_mgr.info("Config unchanged")
             return True
         
+        log_mgr.info("Config update")
         self.check_diffs(self.config, config_new)
+        self.config = config_new
 
         return True
 
@@ -51,8 +54,10 @@ class ConfigManager(object):
     # Ordinamento degli elementi della lista
     def ordered(self, obj):
         if isinstance(obj, dict):
+            log_mgr.info("Sorting - found dict")
             return sorted((k, self.ordered(v)) for k, v in obj.items())
         if isinstance(obj, list):
+            log_mgr.info("Sorting - found list")
             return sorted(self.ordered(x) for x in obj)
         else:
             return obj
