@@ -4,71 +4,73 @@ import json
 import mod_log
 
 config_file = '/usr/src/app/cfg/config.json'
-dict_old = '/usr/src/app/log/dict_old.json'
-dict_new = '/usr/src/app/log/dict_new.json'
+dict_check = '/usr/src/app/log/dict_check.json'
 log_mgr = mod_log.LogManager()
 
 class ConfigManager(object):
     def __init__(self):
-        self.config = []
+        self.config = None
         pass
 
     def load_config(self):
+
         global config_file
+        config_new = None
+        config_old_sorted = None
+        config_new_sorted = None
+
+
         log_mgr.info("Loading Config file <" + str(config_file) + ">")
         if not os.path.isfile(config_file):
             log_mgr.fatal("Config file <" + str(config_file) + "> does not exist!")
             return False
 
-        # Apro la lista dei parametri di configurazione
+        # Open configuration JSON
         try:
             with open(config_file, 'r') as f:
                 if self.config is None:
                     log_mgr.info("Config initialization")
-                    self.config = self.ordered(json.load(f))
-                    with open(dict_old, 'w') as outfile:
-                        json.dumps(self.config, outfile)
+                    self.config = json.load(f)
                     return True
-
-                config_new = self.ordered(json.load(f))
-                with open(dict_new, 'w') as outfile:
-                    json.dumps(config_new, outfile)
+                else:
+                    config_new = json.load(f)
 
         except:
             print "Configuration load error:", sys.exc_info()[0]
             raise
 
-        if (self.config == config_new):
+        # Sort existing config and updated one
+        config_old_sorted = self.ordered(self.config)
+        config_new_sorted = self.ordered(config_new)
+
+        # If nothing change, ok
+        if (config_old_sorted == config_new_sorted):
             log_mgr.info("Config unchanged")
             return True
-        
+
+        # Log configuration changes
         log_mgr.info("Config update")
-        self.check_diffs(self.config, config_new)
+        self.check_diffs(config_old_sorted, config_new_sorted)
         self.config = config_new
 
         return True
 
-    # Stampa gli elementi della lista
+    # Save configurtion dictionary to a new file
     def print_config(self):
-        for item in self.config:
-            lvINDEX=0
-            for params in self.config[item]:
-                for key, value in params.iteritems():
-                    print item +'/'+str(lvINDEX)+'/'+key, value
-                lvINDEX+=1
+        with open(dict_check, 'w') as f:
+            json.dumps(self.config, f)
 
-    # Ordinamento degli elementi della lista
+    # Sorting configurtion dictionary elements
+    # https://stackoverflow.com/questions/25851183/how-to-compare-two-json-objects-with-the-same-elements-in-a-different-order-equa
     def ordered(self, obj):
         if isinstance(obj, dict):
-            log_mgr.info("Sorting - found dict")
             return sorted((k, self.ordered(v)) for k, v in obj.items())
         if isinstance(obj, list):
-            log_mgr.info("Sorting - found list")
             return sorted(self.ordered(x) for x in obj)
         else:
             return obj
 
-    # Confronto dei valori della configurazione nuova con quella vecchia
+    # Compare old and new configuration dictionaries and log differences
     def check_diffs(self, old, new):
         diff = False
         for old_key in old:
@@ -81,7 +83,14 @@ class ConfigManager(object):
         return diff
 
     def get_channel_list(self):
-        return self.config.get('channels', {})
+        channels = self.config.get("channels", [])
+        if (channels is None):
+            log_mgr.warning("Configured channel list is empty!")
+            return []
+        return channels
 
     def get_MQTT_keys_dict(self):
-        return self.config.get('MQTT_keys', {})
+        MQTT_keys = self.config.get("MQTT_keys", {})
+        if (MQTT_keys is None):
+            log_mgr.warning("Configured MQTT_keys list is empty!")
+        return MQTT_keys
