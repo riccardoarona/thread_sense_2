@@ -3,6 +3,7 @@ import os
 import json
 import mod_log
 import time
+from pprint import pprint
 
 config_file = "/usr/src/app/cfg/config.json"
 config_check = "/usr/src/app/log/dict_%Y%m%d-%H%M%S.json"
@@ -30,8 +31,8 @@ class ConfigManager(object):
             with open(config_file, 'r') as f:
                 if self.config is None:
                     log_mgr.info("Config initialization")
-                    self.to_json(json.load(f), "json.load")
                     self.config = json.load(f)
+                    pprint(self.config)
                     self.to_json(self.config, "inner")
                     return True
                 else:
@@ -94,8 +95,7 @@ class ConfigManager(object):
         return diff
 
     def get_channel_list(self):
-        channels = {}
-        channels = self.config.get("acquisition", {}).get("channels", [])
+        channels = self.config.get("channels", [])
         if (channels is None):
             log_mgr.warning("Configured channel list is empty!")
             return []
