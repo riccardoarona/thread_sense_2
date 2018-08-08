@@ -30,8 +30,9 @@ class ConfigManager(object):
             with open(config_file, 'r') as f:
                 if self.config is None:
                     log_mgr.info("Config initialization")
+                    self.to_json(json.load(f), "json.load")
                     self.config = json.load(f)
-                    self.to_json()
+                    self.to_json(self.config, "inner")
                     return True
                 else:
                     config_new = json.load(f)
