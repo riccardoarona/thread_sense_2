@@ -31,6 +31,7 @@ class ConfigManager(object):
                 if self.config is None:
                     log_mgr.info("Config initialization")
                     self.config = json.load(f)
+                    self.to_json()
                     return True
                 else:
                     config_new = json.load(f)
@@ -41,7 +42,9 @@ class ConfigManager(object):
 
         # Sort existing config and updated one
         config_old_sorted = self.ordered(self.config)
+        self.to_json(config_old_sorted, "config_old_sorted")
         config_new_sorted = self.ordered(config_new)
+        self.to_json(config_new_sorted, "config_new_sorted")
 
         # If nothing change, ok
         if (config_old_sorted == config_new_sorted):
@@ -56,11 +59,16 @@ class ConfigManager(object):
         return True
 
     # Save configurtion dictionary to a new file
-    def print_config(self):
+    def to_json(self, cfg=None, cfg_name=None):
         global config_check
+        if (cfg == None):
+            cfg = self.config
+        if (cfg_name == None):
+            cfg_name = "inner"
         config_check_f = time.strftime(config_check)
+        log_mgr.info("Saving config:<" + str(cfg_name) + "> to JSON:<" + str(config_check_f) + ">")
         with open(config_check_f, 'w') as f:
-            json.dumps(self.config, f)
+            json.dumps(cfg, f)
 
     # Sorting configurtion dictionary elements
     # https://stackoverflow.com/questions/25851183/how-to-compare-two-json-objects-with-the-same-elements-in-a-different-order-equa
