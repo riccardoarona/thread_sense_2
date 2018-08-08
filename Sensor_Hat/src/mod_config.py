@@ -4,6 +4,8 @@ import json
 import mod_log
 
 config_file = '/usr/src/app/cfg/config.json'
+dict_old = '/usr/src/app/log/dict_old.json'
+dict_new = '/usr/src/app/log/dict_new.json'
 log_mgr = mod_log.LogManager()
 
 class ConfigManager(object):
@@ -24,6 +26,7 @@ class ConfigManager(object):
                 if self.config is None:
                     log_mgr.info("Config initialization")
                     self.config = self.ordered(json.load(f))
+                    json.dumps(self.config, )
                     return True
 
                 config_new = self.ordered(json.load(f))
