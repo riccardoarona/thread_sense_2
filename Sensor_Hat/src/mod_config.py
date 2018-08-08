@@ -2,15 +2,15 @@ import sys
 import os
 import json
 import mod_log
+import time
 
-config_file = '/usr/src/app/cfg/config.json'
-dict_check = '/usr/src/app/log/dict_check.json'
+config_file = "/usr/src/app/cfg/config.json"
+config_check = "/usr/src/app/log/dict_%Y%m%d-%H%M%S.json"
 log_mgr = mod_log.LogManager()
 
 class ConfigManager(object):
     def __init__(self):
         self.config = None
-        pass
 
     def load_config(self):
 
@@ -57,7 +57,9 @@ class ConfigManager(object):
 
     # Save configurtion dictionary to a new file
     def print_config(self):
-        with open(dict_check, 'w') as f:
+        global config_check
+        config_check_f = time.strftime(config_check)
+        with open(config_check_f, 'w') as f:
             json.dumps(self.config, f)
 
     # Sorting configurtion dictionary elements
@@ -83,14 +85,14 @@ class ConfigManager(object):
         return diff
 
     def get_channel_list(self):
-        channels = self.config.get("channels", [])
+        channels = self.config.get("channels", None)
         if (channels is None):
             log_mgr.warning("Configured channel list is empty!")
             return []
         return channels
 
     def get_MQTT_keys_dict(self):
-        MQTT_keys = self.config.get("MQTT_keys", {})
+        MQTT_keys = self.config.get("MQTT_keys", None)
         if (MQTT_keys is None):
             log_mgr.warning("Configured MQTT_keys list is empty!")
         return MQTT_keys
