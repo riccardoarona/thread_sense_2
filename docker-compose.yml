@@ -1,0 +1,8 @@
+version: '2'
+services:
+  Sensor_Hat:
+    build: ./Sensor_Hat
+    privileged: true
+  ssh:
+    build: ./ssh
+    privileged: true
