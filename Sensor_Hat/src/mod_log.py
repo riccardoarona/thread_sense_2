@@ -1,3 +1,4 @@
+import sys
 import logging
 
 log_path = '/usr/src/app/log/main_log.log'
@@ -9,21 +10,26 @@ class LogManager(object):
         global log
         global log_path
 
-        log = logging.getLogger(__name__)
-        log.setLevel(logging.INFO)
+        try:
 
-        # create a file handler
-        handler = logging.FileHandler(log_path)
-        handler.setLevel(logging.INFO)
+            log = logging.getLogger(__name__)
+            log.setLevel(logging.INFO)
 
-        # create a logging format
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        handler.setFormatter(formatter)
+            # create a file handler
+            handler = logging.FileHandler(log_path)
+            handler.setLevel(logging.INFO)
 
-        # add the handlers to the log
-        log.addHandler(handler)
-        pass
-    
+            # create a logging format
+            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            handler.setFormatter(formatter)
+
+            # add the handlers to the log
+            log.addHandler(handler)
+
+        except:
+            print "Log set-up error:", sys.exc_info()[0]
+            raise
+
     # Aggiunge alla lista una misura dati i valori
     def info(self, message):
         global log

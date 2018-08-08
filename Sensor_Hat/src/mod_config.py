@@ -1,3 +1,4 @@
+import sys
 import os
 import json
 import mod_log
@@ -17,13 +18,18 @@ class ConfigManager(object):
             return False
 
         # Apro la lista dei parametri di configurazione
-        with open(config_file, 'r') as f:
-            if self.config is None:
-                config = self.ordered(json.load(f))
-                return True
+        try:
+            with open(config_file, 'r') as f:
+                if self.config is None:
+                    config = self.ordered(json.load(f))
+                    return True
 
-            config_new = json.load(f)
-            #config_new = self.ordered(config_new)
+                config_new = json.load(f)
+                #config_new = self.ordered(config_new)
+
+        except:
+            print "Configuration load error:", sys.exc_info()[0]
+            raise
 
         if (config == config_new):
             return True
