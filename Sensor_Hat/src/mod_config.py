@@ -26,10 +26,13 @@ class ConfigManager(object):
                 if self.config is None:
                     log_mgr.info("Config initialization")
                     self.config = self.ordered(json.load(f))
-                    json.dumps(self.config, )
+                    with open(dict_old, 'w') as outfile:
+                        json.dumps(self.config, outfile)
                     return True
 
                 config_new = self.ordered(json.load(f))
+                with open(dict_new, 'w') as outfile:
+                    json.dumps(config_new, outfile)
 
         except:
             print "Configuration load error:", sys.exc_info()[0]
