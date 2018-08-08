@@ -27,7 +27,7 @@ class MainClass(object):
         global measure_list
 
         source = None
-        thread = None
+        thd_mgr = None
 
         log_mgr.info("startup")
 
