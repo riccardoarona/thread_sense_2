@@ -6,38 +6,29 @@ import mod_sense_hat
 # Classe per l'avvio dei thread
 class ThreadManager(threading.Thread):
 
-    def __init__(self, channel, threadID, name, delay, source, measure_list):
+    def __init__(self, channel, delay, source, measure_list):
         threading.Thread.__init__(self)
-        self.channel = channel
-        self.threadID = threadID
-        self.name = name
-        self.delay = delay
-        self.source = source
-        self.measure_list = measure_list
-        self.exit_flag = False
+        self.channel = channel              # Canale di acquisizione
+        self.delay = delay                  # Tempo di acquisizione in ms.
+        self.source = source                # Modalita' di acquisizione
+        self.measure_list = measure_list    # Riferimento alla lista misure
+        self.exit_flag = False              # Flag per la terminazione del thread
 
     # Thread per la lettura dei sensori
-    def read_channel(self):
+    def acquisition_thread(self):
 
-        # Avvio il thread di acquisizione
-        print("Starting " + self.name)
-
-        while self.counter:
-
-            # Se ho premuto il pulsante, esco e visualizzo
-            # il segno verde
-            if (self.exit_flag == 1):
-                counter = 0
+        while (self.exit_flag == False):
 
             # Rilevo il timestamp
             ts = time.time()
 
             # Aggiungo alla lista misure
-            self.measure_list.add_details(1, self.source.read_channel(self.channel), ts)
+            self.measure_list.add_details(self.channel, self.source.read_channel(self.channel), ts)
 
             time.sleep(self.delay)
 
-            counter -= 1
+    def stop_thread (self):
+        self.exit_flag = True
 
     # # Thread per il processamento delle misure
     # def parse_measures(self, exit_flag, measure_list):

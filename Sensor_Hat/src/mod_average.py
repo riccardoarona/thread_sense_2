@@ -9,7 +9,7 @@ class AverageManager(object):
     def read_channel(self, channel):
         
         # Calcolo la media
-        val = self.measure_list.avg_by_channel(self.source_channel)
+        val = self.measure_list.avg_by_channel(channel, self.source_channel)
 
         # Arrotondamento ad una cifra decimale
         val = round(val, 2)

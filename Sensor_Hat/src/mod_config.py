@@ -8,20 +8,21 @@ log_mgr = mod_log.LogManager()
 
 class ConfigManager(object):
     def __init__(self):
-        self.config = None
+        self.config = []
         pass
 
     def load_config(self):
         global config_file
+        log_mgr.info("Loading Config file <" + str(config_file) + ">")
         if not os.path.isfile(config_file):
-            log_mgr.fatal("Config file <%s> does not exist!" % config_file)
+            log_mgr.fatal("Config file <" + str(config_file) + "> does not exist!")
             return False
 
         # Apro la lista dei parametri di configurazione
         try:
             with open(config_file, 'r') as f:
                 if self.config is None:
-                    config = self.ordered(json.load(f))
+                    self.config = self.ordered(json.load(f))
                     return True
 
                 config_new = json.load(f)
@@ -31,10 +32,10 @@ class ConfigManager(object):
             print "Configuration load error:", sys.exc_info()[0]
             raise
 
-        if (config == config_new):
+        if (self.config == config_new):
             return True
         
-        self.check_diffs(config, config_new)
+        self.check_diffs(self.config, config_new)
 
         return True
 

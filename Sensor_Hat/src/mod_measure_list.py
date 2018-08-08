@@ -37,7 +37,16 @@ class MeasureList(object):
                 meas.read = 1
         return part_list
 
-    # Ritorna lista delle misure per singolo canale e stato
+    # Ritorna lista delle misure per singolo canale
+    def list_by_id(self, id):
+        part_list = []
+        for meas in self.plist:
+            if ((meas.id == id) & (meas.read == 0)):
+                part_list.append(meas)
+                meas.read = 1
+        return part_list
+
+    # Ritorna lista delle misure per singolo id e stato
     def json_dictionary(self, cfg_mgr):
         dic_list = []
         key_dict = cfg_mgr.get_MQTT_keys_dict()
@@ -53,7 +62,7 @@ class MeasureList(object):
         return dic_list
 
     # Ritorna media delle misure per singolo canale e stato
-    def avg_by_channel(self, channel):
+    def avg_by_channel(self, channel, source_channel):
 
         # Numero misure contate
         val_count = 0
@@ -63,7 +72,7 @@ class MeasureList(object):
 
         # Estraggo le misure e calcolo la media
         for meas in self.plist:
-            if ((meas.channel == channel) & (meas.average == 0)):
+            if ((meas.channel == source_channel) & (meas.average == 0)):
                 if (val_ts == 0):
                     val_ts = meas.timestamp
                 val_count = val_count + 1
@@ -79,6 +88,12 @@ class MeasureList(object):
         meas_avg = Measure(channel, val_avg, val_ts, val_count)
 
         return meas_avg
+
+    # Elimina gli elementi processati
+    def clear_list_by_channel(self, channel):
+        for meas in self.plist:
+            if (meas.channel == channel):
+                self.plist.remove(meas)
 
     # Elimina gli elementi processati
     def clear_list(self):

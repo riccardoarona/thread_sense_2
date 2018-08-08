@@ -1,3 +1,4 @@
+# coding=utf-8
 import time
 from sense_hat import SenseHat, ACTION_PRESSED, ACTION_HELD, ACTION_RELEASED
 
@@ -6,8 +7,9 @@ channels = [1, 2]
 
 G = [0, 127, 0]  # Green
 R = [127, 0, 0]  # Red
+X = [0, 0, 0]  # Off
 
-# Segno verde: visualizzato al termine del programma
+# Segno verde: visualizzato all'avvio e al termine del programma
 green_sign = [
 G, G, G, G, G, G, G, G,
 G, G, G, R, R, G, G, G,
@@ -19,9 +21,24 @@ G, G, G, R, R, G, G, G,
 G, G, G, G, G, G, G, G
 ]
 
+# Segno verde: visualizzato all'avvio e al termine del programma
+display_off = [
+X, X, X, X, X, X, X, X,
+X, X, X, X, X, X, X, X,
+X, X, X, X, X, X, X, X,
+X, X, X, X, X, X, X, X,
+X, X, X, X, X, X, X, X,
+X, X, X, X, X, X, X, X,
+X, X, X, X, X, X, X, X,
+X, X, X, X, X, X, X, X
+]
+
 exit_flag = (0)
 calib_temp = None
 sense = None
+
+x = 0
+y = 0
 
 class SenseManager(object):
     def __init__(self, channel):
@@ -39,10 +56,14 @@ class SenseManager(object):
         sense.stick.direction_middle = self.pushed_middle
 
         # Lettura dai sensori del SenseHat acquisizione Temperatura, Pressione, Humidity
-        if (self.channel == 1):
+        if(self.channel == 1):
             val = sense.get_temperature()
-        else:
+        elif(self.channel == 2):
             val = sense.get_pressure()
+        else:
+            val = sense.get_humidity()
+
+        self.light_up_pixel()
 
         # Arrotondamento ad una cifra decimale
         val = round(val, 2)
@@ -65,57 +86,47 @@ class SenseManager(object):
     def show_green_sign(self):
         sense.set_pixels(green_sign)
 
-    # Metdodo per la colorazione del display del sensehat
-    def show_temperature(self, temp_value):
+    # Alla pressione del pulsante del sense-hat il programma termina
+    def turn_off_display(self):
+        sense.set_pixels(display_off)
 
-        global calib_temp
+    def light_up_pixel (self):
 
-        # Calcolo il livello di colore (tra 1 e 255) proporzionale alla temperatura rilevata
-        pixel_light = int( (((temp_value - calib_temp.pmin) / (calib_temp.pmax - calib_temp.pmin)) * 255) // 1)
-        if (pixel_light > 255):
-            pixel_light = 255
-        if (pixel_light < 0):
-            pixel_light = 0
+        meas_color = []
+        pix = []
 
-        # Creo il codice colore di riferimento:
-        # Blu = freddo; Rosso = caldo
-        X = [pixel_light, 0, 255 - pixel_light]
+        if(self.channel == 1):
+            meas_color = [255, 0, 0]
+        elif(self.channel == 2):
+            meas_color = [0, 255, 0]
+        else:
+            meas_color = [0, 0, 255]
 
-        # Matrice "tinta unita"
-        one_level = [
-        X, X, X, X, X, X, X, X,
-        X, X, X, X, X, X, X, X,
-        X, X, X, X, X, X, X, X,
-        X, X, X, X, X, X, X, X,
-        X, X, X, X, X, X, X, X,
-        X, X, X, X, X, X, X, X,
-        X, X, X, X, X, X, X, X,
-        X, X, X, X, X, X, X, X
-        ]
-        
-        # Coloro il display in tinta unita
-        sense.set_pixels(one_level)
+        pix = self.next_pixel()
+        sense.set_pixel(pix[0], pix[1], meas_color)
 
-    def calibrate(self, sensor, pcycles=5, pmin=0, pmax=100):
+    def next_pixel(self):
 
-        avg_temp = 0
-        calib = 1
+        global X
+        global x
+        global y
 
-        # Avvio fase di calibrazione iniziale: la temperatura media risulta
-        # da una media di 5 rilevazioni della temperatura ambiente
-        print("Calibrating Sensor: <" + sensor + ">")
+        pix = []
 
-        while (calib <= pcycles):
-            avg_temp = avg_temp + sense.get_temperature()
-            print ("Calibration [" + str(calib) + "]: <" + str(avg_temp / calib) + ">")
-            calib = calib + 1
-            time.sleep(1)
+        while (sense.get_pixel(x, y) != X):
 
-        avg_temp = avg_temp / pcycles
-        print ("Avg: <" + str(avg_temp)+ ">")
+            x = x + 1
 
-        # Fisso i valori di riferimento del range di temperatura
-        # (+/- 1C rispetto alla temperatura di calibrazione)
-        pmax = avg_temp + 1
-        pmin = avg_temp - 1
-        print ("Min: <" + str(pmin)+ ">; Max: <" +str(pmax)+ ">")
+            if (x == 8):
+                x = 0
+                y = y + 1
+
+            if (y == 8):
+                self.turn_off_display()
+                x = 0
+                y = 0
+
+        pix.append(x)
+        pix.append(y)
+
+        return pix
