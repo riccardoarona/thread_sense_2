@@ -66,6 +66,7 @@ class MainClass(object):
         
 # Istanzio la classe del log
 log_mgr = mod_log.LogManager()
+log_mgr.info("service", "startup")
 
 # Leggo la configurazione
 cfg_mgr = mod_config.ConfigManager()
@@ -77,6 +78,8 @@ measure_list = mod_measure_list.MeasureList()
 main = MainClass()
 main.setup_threads()
 main.start_threads()
+
+log_mgr.info("service", "stop")
 
 # sns_mgr.show_green_sign()
 print("Termine programma")

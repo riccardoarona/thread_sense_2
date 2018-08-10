@@ -46,7 +46,7 @@ class SenseManager(object):
         global sense
         self.channel = channel
         sense = SenseHat()
-        self.show_green_sign()
+        self.turn_off_display()
 
         self.log_mgr = mod_log.LogManager()
         self.log_mgr.info(self.__class__.__name__, "SenseManager initialized")
