@@ -39,5 +39,11 @@
         { 
         "log_path": "/usr/src/app/log/DAB_0001.log"
         }
+    ],
+    "exit": [
+        {
+        "thread_timeout_ms": "1000",
+        "thread_stop_timeout_ms": "10000"
+        }
     ]
 }

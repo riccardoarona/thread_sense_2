@@ -16,11 +16,11 @@ class ThreadManager(threading.Thread):
         self.exit_flag = False              # Flag per la terminazione del thread
 
         self.log_mgr = mod_log.LogManager()
-        self.log_mgr.info(self.name, "initialized for channel <" + str(self.channel) + ">")
+        self.log_mgr.info(self.__class__.__name__, "initialized for channel <" + str(self.channel) + ">")
 
     # Sensors reading thread
     def start_acquisition(self):
-        self.log_mgr.info(self.name, "started for channel <" + str(self.channel) + ">")
+        self.log_mgr.info(self.__class__.__name__, "started for channel <" + str(self.channel) + ">")
 
         while (self.exit_flag == False):
 
@@ -34,7 +34,7 @@ class ThreadManager(threading.Thread):
             time.sleep(self.delay)
 
     def stop_acquisition (self):
-        self.log_mgr.info(self.name, "stopped for channel <" + str(self.channel) + ">")
+        self.log_mgr.info(self.__class__.__name__, "stopped for channel <" + str(self.channel) + ">")
         self.exit_flag = True
 
     def stopped_acquisition(self):

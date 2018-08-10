@@ -49,7 +49,7 @@ class SenseManager(object):
         self.show_green_sign()
 
         self.log_mgr = mod_log.LogManager()
-        self.log_mgr.info(self.name, "SenseManager initialized")
+        self.log_mgr.info(self.__class__.__name__, "SenseManager initialized")
 
     # Acquire single measure from single channel
     def read_channel(self):

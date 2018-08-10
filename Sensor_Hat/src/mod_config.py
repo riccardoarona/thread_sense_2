@@ -9,9 +9,30 @@ config_file = "/usr/src/app/cfg/config.json"
 config_check = "/usr/src/app/log/dict_%Y%m%d-%H%M%S.json"
 log_mgr = mod_log.LogManager()
 
+class ConfigDefaults(object):
+    def __init__(self):
+        self.exit = [{"thread_stop_timeout_ms": "10000"}]
+        pass
+
+    def get_exit(self):
+        return self.exit
+
+class ValidateConfig(object):
+    def __init__(self):
+        pass
+    
+    def is_number(self, check_string):
+        try:
+            float(check_string)
+            return True
+        except ValueError:
+            return False
+    
 class ConfigManager(object):
     def __init__(self):
         self.config = None
+        self.cd = ConfigDefaults()
+        self.vc = ValidateConfig
 
     def load_config(self):
 
@@ -21,16 +42,16 @@ class ConfigManager(object):
         config_new_sorted = None
 
 
-        log_mgr.info(self.name, "Loading Config file <" + str(config_file) + ">")
+        log_mgr.info(self.__class__.__name__, "Loading Config file <" + str(config_file) + ">")
         if not os.path.isfile(config_file):
-            log_mgr.fatal(self.name, "Config file <" + str(config_file) + "> does not exist!")
+            log_mgr.fatal(self.__class__.__name__, "Config file <" + str(config_file) + "> does not exist!")
             return False
 
         # Open configuration JSON
         try:
             with open(config_file, 'r') as f:
                 if self.config is None:
-                    log_mgr.info(self.name, "Config initialization")
+                    log_mgr.info(self.__class__.__name__, "Config initialization")
                     self.config = json.load(f)
                     self.to_json(self.config, "inner")
                     return True
@@ -49,11 +70,11 @@ class ConfigManager(object):
 
         # If nothing change, ok
         if (config_old_sorted == config_new_sorted):
-            log_mgr.info(self.name, "Config unchanged")
+            log_mgr.info(self.__class__.__name__, "Config unchanged")
             return True
 
         # Log configuration changes
-        log_mgr.info(self.name, "Config update")
+        log_mgr.info(self.__class__.__name__, "Config update")
         self.check_diffs(config_old_sorted, config_new_sorted)
         self.config = config_new
 
@@ -67,7 +88,7 @@ class ConfigManager(object):
         if (cfg_name == None):
             cfg_name = "inner"
         config_check_f = time.strftime(config_check)
-        log_mgr.info(self.name, "Saving config:<" + str(cfg_name) + "> to JSON:<" + str(config_check_f) + ">")
+        log_mgr.info(self.__class__.__name__, "Saving config:<" + str(cfg_name) + "> to JSON:<" + str(config_check_f) + ">")
         with open(config_check_f, 'w') as f:
             json.dumps(cfg, f)
             f.close()
@@ -88,21 +109,28 @@ class ConfigManager(object):
         for old_key in old:
             if old_key not in new:
                 diff = True
-                log_mgr.warning("key:<%s> missing" %old_key)
+                log_mgr.warning(self.__class__.__name__, "key:<%s> missing" %old_key)
             elif old[old_key] != new[old_key]:
                 diff = True
-                log_mgr.warning("key:<" + old_key + "> value updated: old:<" + old[old_key] + ">; new:<" + new[old_key] + ">")
+                log_mgr.warning(self.__class__.__name__, "key:<" + old_key + "> value updated: old:<" + old[old_key] + ">; new:<" + new[old_key] + ">")
         return diff
 
     def get_channel_list(self):
         channels = self.config.get("channels", [])
         if (channels is None):
-            log_mgr.warning("Configured channel list is empty!")
+            log_mgr.warning(self.__class__.__name__, "Configured channel list is empty!")
             return []
         return channels
+
+    def get_exit_params(self):
+        exit_params = self.config.get("exit", [])
+        if (exit_params is None):
+            log_mgr.warning(self.__class__.__name__, "Exit param list is empty! Using defaults.")
+            exit_params = self.cd.get_exit()
+        return exit_params
 
     def get_MQTT_keys_dict(self):
         MQTT_keys = self.config.get("MQTT_keys", None)
         if (MQTT_keys is None):
-            log_mgr.warning("Configured MQTT_keys list is empty!")
+            log_mgr.warning(self.__class__.__name__, "Configured MQTT_keys list is empty!")
         return MQTT_keys

@@ -9,7 +9,7 @@ class AverageManager(object):
         self.channel = channel
         
         self.log_mgr = mod_log.LogManager()
-        self.log_mgr.info(self.name, "AverageManager initialized")
+        self.log_mgr.info(self.__class__.__name__, "AverageManager initialized")
 
     # Acquire single measure from single channel
     def read_channel(self):
