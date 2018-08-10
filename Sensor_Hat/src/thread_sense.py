@@ -22,8 +22,8 @@ class MainClass(object):
         self.cfg_mgr.load_config()
         self.channel_list = self.cfg_mgr.get_channel_list()
 
-        self.thread_timeout = int(self.cfg_mgr.get_exit_params().get("thread_timeout_ms", 10000)) / 1000
-        self.thread_stop_timeout = int(self.cfg_mgr.get_exit_params().get("thread_stop_timeout_ms", 10000)) / 1000
+        self.thread_timeout = int(self.cfg_mgr.get_exit_params()[0].get("thread_timeout_ms", 10000)) / 1000
+        self.thread_stop_timeout = int(self.cfg_mgr.get_exit_params()[0].get("thread_stop_timeout_ms", 10000)) / 1000
 
 
     def setup_threads(self):
