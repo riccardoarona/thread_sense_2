@@ -29,7 +29,6 @@ class ThreadManager(threading.Thread):
 
             # Add to measure list
             self.measure_list.add_details(self.channel, self.source.read_channel(), ts)
-            self.exit_flag = self.source.check_exit()
 
             time.sleep(self.delay)
 
