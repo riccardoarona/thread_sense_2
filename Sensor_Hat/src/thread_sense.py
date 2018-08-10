@@ -70,10 +70,5 @@ cfg_mgr = mod_config.ConfigManager()
 # Istanzio la lista misure
 measure_list = mod_measure_list.MeasureList()
 
-# Avvio il programma
-main = MainClass()
-main.setup_threads()
-main.start_threads()
-
 # sns_mgr.show_green_sign()
 print("Termine programma")
