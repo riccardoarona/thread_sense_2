@@ -41,7 +41,7 @@ class MainClass(object):
                 source = mod_average.AverageManager(measure_list, ch.get("source_channel"))
 
             # Istanzio il thread, fornendogli il riferimento del canale di acquisizione
-            samp_time = ch.get("samp_time_ms") / 1000
+            samp_time = int(ch.get("samp_time_ms")) / 1000
             log_mgr.info("Thread start: <" + str(ch.get("id")) + ">")
             thd_mgr = mod_thread.ThreadManager(ch.get("channel"), samp_time, source, measure_list)
             thread_list.append(thd_mgr)
