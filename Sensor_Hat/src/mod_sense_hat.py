@@ -38,8 +38,8 @@ exit_flag = False
 calib_temp = None
 sense = None
 
-x = 8
-y = 8
+x = 0
+y = 0
 
 class SenseManager(object):
     def __init__(self, channel):
