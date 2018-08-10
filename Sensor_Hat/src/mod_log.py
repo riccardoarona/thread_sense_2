@@ -30,16 +30,16 @@ class LogManager(object):
             raise
 
     # Aggiunge alla lista una misura dati i valori
-    def info(self, message):
+    def info(self, caller, message):
         global log
-        log.info(message)
+        log.info(caller + " - "  + message)
 
     # Aggiunge alla lista una misura dati i valori
-    def fatal(self, message):
+    def fatal(self, caller, message):
         global log
-        log.fatal(message)
+        log.fatal(caller + " - "  + message)
 
     # Aggiunge alla lista una misura dati i valori
-    def warning(self, message):
+    def warning(self, caller, message):
         global log
-        log.warning(message)
+        log.warning(caller + " - "  + message)

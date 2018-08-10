@@ -1,5 +1,6 @@
 # coding=utf-8
 import time
+import mod_log
 from sense_hat import SenseHat, ACTION_PRESSED, ACTION_HELD, ACTION_RELEASED
 
 # Array dei canali 
@@ -33,12 +34,12 @@ X, X, X, X, X, X, X, X,
 X, X, X, X, X, X, X, X
 ]
 
-exit_flag = (0)
+exit_flag = False
 calib_temp = None
 sense = None
 
-x = 0
-y = 0
+x = 8
+y = 8
 
 class SenseManager(object):
     def __init__(self, channel):
@@ -46,16 +47,16 @@ class SenseManager(object):
         self.channel = channel
         sense = SenseHat()
         self.show_green_sign()
-        pass
 
+        self.log_mgr = mod_log.LogManager()
+        self.log_mgr.info(self.name, "SenseManager initialized")
+
+    # Acquire single measure from single channel
     def read_channel(self):
 
         val = None
         
-        # Verifico se ho premuto il pulsante di stop
-        sense.stick.direction_middle = self.pushed_middle
-
-        # Lettura dai sensori del SenseHat acquisizione Temperatura, Pressione, Humidity
+        # Acquiring from SenseHat sensors: Temperature, Pressure, Humidity
         if(self.channel == 1):
             val = sense.get_temperature()
         elif(self.channel == 2):
@@ -65,22 +66,16 @@ class SenseManager(object):
 
         self.light_up_pixel()
 
-        # Arrotondamento ad una cifra decimale
+        # One digit round
         val = round(val, 2)
 
         return val
 
-    
+
+
 # ------------------------------------------------------------------------------------------------
 #  METODI DEDICATI PER IL SENSE-HAT
 # ------------------------------------------------------------------------------------------------
-
-    # Alla pressione del pulsante del sense-hat il programma termina
-    def pushed_middle(self, event):
-        global exit_flag
-        if event.action == ACTION_PRESSED:
-            print("Button pressed")
-            exit_flag = 1
 
     # Alla pressione del pulsante del sense-hat il programma termina
     def show_green_sign(self):

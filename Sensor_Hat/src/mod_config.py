@@ -21,16 +21,16 @@ class ConfigManager(object):
         config_new_sorted = None
 
 
-        log_mgr.info("Loading Config file <" + str(config_file) + ">")
+        log_mgr.info(self.name, "Loading Config file <" + str(config_file) + ">")
         if not os.path.isfile(config_file):
-            log_mgr.fatal("Config file <" + str(config_file) + "> does not exist!")
+            log_mgr.fatal(self.name, "Config file <" + str(config_file) + "> does not exist!")
             return False
 
         # Open configuration JSON
         try:
             with open(config_file, 'r') as f:
                 if self.config is None:
-                    log_mgr.info("Config initialization")
+                    log_mgr.info(self.name, "Config initialization")
                     self.config = json.load(f)
                     self.to_json(self.config, "inner")
                     return True
@@ -49,11 +49,11 @@ class ConfigManager(object):
 
         # If nothing change, ok
         if (config_old_sorted == config_new_sorted):
-            log_mgr.info("Config unchanged")
+            log_mgr.info(self.name, "Config unchanged")
             return True
 
         # Log configuration changes
-        log_mgr.info("Config update")
+        log_mgr.info(self.name, "Config update")
         self.check_diffs(config_old_sorted, config_new_sorted)
         self.config = config_new
 
@@ -67,7 +67,7 @@ class ConfigManager(object):
         if (cfg_name == None):
             cfg_name = "inner"
         config_check_f = time.strftime(config_check)
-        log_mgr.info("Saving config:<" + str(cfg_name) + "> to JSON:<" + str(config_check_f) + ">")
+        log_mgr.info(self.name, "Saving config:<" + str(cfg_name) + "> to JSON:<" + str(config_check_f) + ">")
         with open(config_check_f, 'w') as f:
             json.dumps(cfg, f)
             f.close()

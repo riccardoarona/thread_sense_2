@@ -16,7 +16,7 @@ class MainClass(object):
         self.cfg_mgr = cfg_mgr
 
         self.channel_list = []
-        log_mgr.info("initialization")
+        log_mgr.info(self.name, "initialization")
 
         self.cfg_mgr.load_config()
         self.channel_list = self.cfg_mgr.get_channel_list()
@@ -29,20 +29,20 @@ class MainClass(object):
         source = None
         thd_mgr = None
 
-        log_mgr.info("startup")
+        log_mgr.info(self.name, "startup")
 
         for ch in self.channel_list:
 
             # Istanzio l'oggetto che gestisce il canale di acquisizione (fisico o calcolato)
-            log_mgr.info("Source definition: <" + str(ch.get("channel")) + ">; <" + str(ch.get("channel")) + ">")
+            log_mgr.info(self.name, "Source definition: <" + str(ch.get("channel")) + ">; <" + str(ch.get("channel")) + ">")
             if (ch.get("type") == "analogue"):
                 source = mod_sense_hat.SenseManager(ch.get("channel"))
             if (ch.get("type") == "average"):
-                source = mod_average.AverageManager(measure_list, ch.get("source_channel"))
+                source = mod_average.AverageManager(measure_list, ch.get("channel"), ch.get("source_channel"))
 
             # Istanzio il thread, fornendogli il riferimento del canale di acquisizione
             samp_time = int(ch.get("samp_time_ms")) / 1000
-            log_mgr.info("Thread start: <" + str(ch.get("id")) + ">")
+            log_mgr.info(self.name, "Thread start: <" + str(ch.get("id")) + ">")
             thd_mgr = mod_thread.ThreadManager(ch.get("channel"), samp_time, source, measure_list)
             thread_list.append(thd_mgr)
 

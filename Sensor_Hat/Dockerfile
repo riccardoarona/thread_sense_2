@@ -19,7 +19,6 @@ COPY . ./
 
 ENV INITSYSTEM on
 
-CMD ["python", "/usr/src/app/src/thread_sense.py"]
 CMD ["./src/start.sh"]
 
 #RUN apt-get update && apt-get install -yq \

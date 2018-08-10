@@ -1,9 +1,10 @@
 import threading
 import time
+import mod_log
 import mod_measure_list
 import mod_sense_hat
 
-# Classe per l'avvio dei thread
+# Threads management class
 class ThreadManager(threading.Thread):
 
     def __init__(self, channel, delay, source, measure_list):
@@ -14,21 +15,30 @@ class ThreadManager(threading.Thread):
         self.measure_list = measure_list    # Riferimento alla lista misure
         self.exit_flag = False              # Flag per la terminazione del thread
 
-    # Thread per la lettura dei sensori
+        self.log_mgr = mod_log.LogManager()
+        self.log_mgr.info(self.name, "initialized for channel <" + str(self.channel) + ">")
+
+    # Sensors reading thread
     def start_acquisition(self):
+        self.log_mgr.info(self.name, "started for channel <" + str(self.channel) + ">")
 
         while (self.exit_flag == False):
 
-            # Rilevo il timestamp
+            # Get timestamp
             ts = time.time()
 
-            # Aggiungo alla lista misure
+            # Add to measure list
             self.measure_list.add_details(self.channel, self.source.read_channel(self.channel), ts)
+            self.exit_flag = self.source.check_exit()
 
             time.sleep(self.delay)
 
     def stop_acquisition (self):
+        self.log_mgr.info(self.name, "stopped for channel <" + str(self.channel) + ">")
         self.exit_flag = True
+
+    def stopped_acquisition(self):
+        return self.exit_flag
 
     # # Thread per il processamento delle misure
     # def parse_measures(self, exit_flag, measure_list):
