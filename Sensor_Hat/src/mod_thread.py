@@ -15,7 +15,7 @@ class ThreadManager(threading.Thread):
         self.exit_flag = False              # Flag per la terminazione del thread
 
     # Thread per la lettura dei sensori
-    def acquisition_thread(self):
+    def start_acquisition(self):
 
         while (self.exit_flag == False):
 
@@ -27,7 +27,7 @@ class ThreadManager(threading.Thread):
 
             time.sleep(self.delay)
 
-    def stop_thread (self):
+    def stop_acquisition (self):
         self.exit_flag = True
 
     # # Thread per il processamento delle misure

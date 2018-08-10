@@ -50,7 +50,7 @@ class MainClass(object):
         for th in thread_list:
             th.start()
             th.join()
-            th.read_channel()
+            th.start_acquisition()
 
 # Istanzio la classe del log
 log_mgr = mod_log.LogManager()
