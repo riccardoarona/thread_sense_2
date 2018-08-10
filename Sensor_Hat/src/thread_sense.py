@@ -13,13 +13,13 @@ class MainClass(object):
     def __init__(self):
 
         global log_mgr
-        global cfg_mgr
+        self.cfg_mgr = cfg_mgr
 
-        self.channel_list = None
+        self.channel_list = []
         log_mgr.info("initialization")
 
-        cfg_mgr.load_config()
-        self.channel_list = cfg_mgr.get_channel_list
+        self.cfg_mgr.load_config()
+        self.channel_list = self.cfg_mgr.get_channel_list()
 
     def setup_threads(self):
         global log_mgr
