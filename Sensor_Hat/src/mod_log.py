@@ -2,17 +2,16 @@ import sys
 import logging
 
 log_path = '/usr/src/app/log/main_log.log'
-log = logging.getLogger(__name__)
 
 class LogManager(object):
 
     def __init__(self):
-        global log
         global log_path
+        self.log = logging.getLogger(__name__)
 
         try:
 
-            log.setLevel(logging.INFO)
+            self.log.setLevel(logging.INFO)
 
             # create a file handler
             handler = logging.FileHandler(log_path)
@@ -23,7 +22,7 @@ class LogManager(object):
             handler.setFormatter(formatter)
 
             # add the handlers to the log
-            log.addHandler(handler)
+            self.log.addHandler(handler)
 
         except:
             print "Log set-up error:", sys.exc_info()[0]
@@ -31,15 +30,12 @@ class LogManager(object):
 
     # Aggiunge alla lista una misura dati i valori
     def info(self, caller, message):
-        global log
-        log.info(caller + " - "  + message)
+        self.log.info(caller + " - "  + message)
 
     # Aggiunge alla lista una misura dati i valori
     def fatal(self, caller, message):
-        global log
-        log.fatal(caller + " - "  + message)
+        self.log.fatal(caller + " - "  + message)
 
     # Aggiunge alla lista una misura dati i valori
     def warning(self, caller, message):
-        global log
-        log.warning(caller + " - "  + message)
+        self.log.warning(caller + " - "  + message)

@@ -13,11 +13,11 @@ thread_list = []
 class MainClass(object):
     def __init__(self):
 
-        global log_mgr
+        self.log_mgr = mod_log.LogManager()
         self.cfg_mgr = cfg_mgr
 
         self.channel_list = []
-        log_mgr.info(self.__class__.__name__, "initialization")
+        self.log_mgr.info(self.__class__.__name__, "initialization")
 
         self.cfg_mgr.load_config()
         self.channel_list = self.cfg_mgr.get_channel_list()
@@ -27,19 +27,19 @@ class MainClass(object):
 
 
     def setup_threads(self):
-        global log_mgr
+
         global thread_list
         global measure_list
 
         source = None
         thd_mgr = None
 
-        log_mgr.info(self.__class__.__name__, "startup")
+        self.log_mgr.info(self.__class__.__name__, "startup")
 
         for ch in self.channel_list:
 
             # Istanzio l'oggetto che gestisce il canale di acquisizione (fisico o calcolato)
-            log_mgr.info(self.__class__.__name__, "Source definition: <" + str(ch.get("channel")) + ">; <" + str(ch.get("channel")) + ">")
+            self.log_mgr.info(self.__class__.__name__, "Source definition: <" + str(ch.get("channel")) + ">; <" + str(ch.get("channel")) + ">")
             if (ch.get("type") == "analogue"):
                 source = mod_sense_hat.SenseManager(ch.get("channel"))
             if (ch.get("type") == "average"):
@@ -47,7 +47,7 @@ class MainClass(object):
 
             # Istanzio il thread, fornendogli il riferimento del canale di acquisizione
             samp_time = int(ch.get("samp_time_ms")) / 1000
-            log_mgr.info(self.__class__.__name__, "Thread start: <" + str(ch.get("id")) + ">")
+            self.log_mgr.info(self.__class__.__name__, "Thread start: <" + str(ch.get("id")) + ">")
             thd_mgr = mod_thread.ThreadManager(ch.get("channel"), samp_time, source, measure_list)
             thread_list.append(thd_mgr)
 
@@ -63,10 +63,6 @@ class MainClass(object):
         self.exit_mgr.start()
         self.exit_mgr.join()
         self.exit_mgr.start_exit_mgr()
-        
-# Istanzio la classe del log
-log_mgr = mod_log.LogManager()
-log_mgr.info("service", "startup")
 
 # Leggo la configurazione
 cfg_mgr = mod_config.ConfigManager()
@@ -78,8 +74,6 @@ measure_list = mod_measure_list.MeasureList()
 main = MainClass()
 main.setup_threads()
 main.start_threads()
-
-log_mgr.info("service", "stop")
 
 # sns_mgr.show_green_sign()
 print("Termine programma")
