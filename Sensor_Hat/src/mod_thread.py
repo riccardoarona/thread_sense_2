@@ -8,7 +8,6 @@ import mod_sense_hat
 class ThreadManager(object):
 
     def __init__(self, log_mgr, channel, delay, source, measure_list):
-        threading.Thread.__init__(self)
         self.log_mgr = log_mgr              # Logger module
         self.channel = channel              # Canale di acquisizione
         self.delay = delay                  # Tempo di acquisizione in ms.

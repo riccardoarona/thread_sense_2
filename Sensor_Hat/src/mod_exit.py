@@ -11,10 +11,10 @@ sense = None
 class ExitManager(threading.Thread):
 
     def __init__(self, log_mgr, delay, close_timeout, thread_list):
-        global sense
-        threading.Thread.__init__(self)
-        self.log_mgr = log_mgr
 
+        global sense
+
+        self.log_mgr = log_mgr
         self.thread_list = thread_list      # Data acquisition thread list
         self.close_timeout = close_timeout  # Timeout for threads closeup
         self.delay = delay                  # Tempo di acquisizione in ms.
