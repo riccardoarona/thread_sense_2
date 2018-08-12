@@ -47,7 +47,7 @@ class ExitManager(threading.Thread):
 
         for th in self.thread_list:
             th.stop_acquisition()
-            while (th.stopped_acquisition & self.close_timeout <= 10):
+            while (th.stopped_acquisition and self.close_timeout <= 10):
                 self.close_timeout = self.close_timeout - 1
                 time.sleep(1)
 
