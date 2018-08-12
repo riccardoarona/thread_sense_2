@@ -11,8 +11,8 @@
         }
     ],
     "channels": [
-        { "enabled": "true", "type": "analogue", "send": "false", "id": "TMP_0001", "name": "temperatura", "channel": "1", "source_channel": "1", "samp_time_ms":  "500", "upper_limit": "40", "lower_limit": "-10" },
-        { "enabled": "true", "type": "analogue", "send": "false", "id": "PRS_0001", "name": "pressione", "channel": "2", "source_channel": "2", "samp_time_ms": "1000", "upper_limit": "1200", "lower_limit": "800" },
+        { "enabled": "true", "type": "analogue", "send": "false", "id": "TMP_0001", "name": "temperatura", "channel": "1", "source_channel": "1", "samp_time_ms": "2000", "upper_limit": "40", "lower_limit": "-10" },
+        { "enabled": "true", "type": "analogue", "send": "false", "id": "PRS_0001", "name": "pressione", "channel": "2", "source_channel": "2", "samp_time_ms": "3000", "upper_limit": "1200", "lower_limit": "800" },
         { "enabled": "true", "type": "average", "send": "true", "id": "TMP_AVG_0001", "name": "media minuto temperatura", "channel": "3", "source_channel": "1", "samp_time_ms": "60000", "upper_limit": "40", "lower_limit": "-10" },
         { "enabled": "true", "type": "average", "send": "true", "id": "PRS_AVG_0001", "name": "media minuto pressione", "channel": "4", "source_channel": "2", "samp_time_ms": "60000", "upper_limit": "1200", "lower_limit": "800" }
     ],
