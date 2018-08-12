@@ -21,7 +21,7 @@ class MainClass(object):
         self.measure_list = mod_measure_list.MeasureList()
 
         # Leggo la configurazione
-        self.cfg_mgr = mod_config.ConfigManager()
+        self.cfg_mgr = mod_config.ConfigManager(self.log_mgr)
         self.cfg_mgr.load_config()
         self.channel_list = self.cfg_mgr.get_channel_list()
 
@@ -35,7 +35,7 @@ class MainClass(object):
         source = None
         thd_mgr = None
 
-        self.log_mgr.info(self.__class__.__name__, "Startup")
+        self.log_mgr.info(self.__class__.__name__, "Setting-up threads")
 
         for ch in self.channel_list:
 
@@ -71,8 +71,8 @@ class MainClass(object):
         self.exit_mgr.start_exit_mgr()
 
 main = MainClass()
-main.setup_threads
-main.start_threads
+main.setup_threads()
+main.start_threads()
 
 # sns_mgr.show_green_sign()
 print("Termine programma")

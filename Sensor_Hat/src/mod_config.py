@@ -27,9 +27,9 @@ class ValidateConfig(object):
         except ValueError:
             return False
     
-class ConfigManager(object):
+class ConfigManager(object, log_mgr):
     def __init__(self):
-        self.log_mgr = mod_log.LogManager()
+        self.log_mgr = log_mgr
         self.config = None
         self.cd = ConfigDefaults()
         self.vc = ValidateConfig
