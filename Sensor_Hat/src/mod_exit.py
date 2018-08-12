@@ -23,8 +23,14 @@ class ExitManager(threading.Thread):
 
         self.log_mgr.info(self.__class__.__name__, "initialized")
 
-    # Sensors reading thread
-    def start_exit_mgr(self):
+    # Start exit management thread
+    def start_exit_mgmt(self):
+        self.exm_thread = threading.Thread(target = self.exit_mgmt_thread)
+        self.exm_thread.start()
+        self.exm_thread.join()
+
+    # Exit manager thread
+    def exit_mgmt_thread(self):
         self.log_mgr.info(self.__class__.__name__, "started")
 
         while (self.exit_flag == False):
@@ -42,7 +48,7 @@ class ExitManager(threading.Thread):
         for th in self.thread_list:
             th.stop_acquisition()
             while (th.stopped_acquisition & self.close_timeout <= 10):
-                c_timeout = self.close_timeout - 1
+                self.close_timeout = self.close_timeout - 1
                 time.sleep(1)
 
 # ------------------------------------------------------------------------------------------------

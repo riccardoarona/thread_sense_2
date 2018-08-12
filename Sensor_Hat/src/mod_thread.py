@@ -5,7 +5,7 @@ import mod_measure_list
 import mod_sense_hat
 
 # Threads management class
-class ThreadManager(threading.Thread):
+class ThreadManager(object):
 
     def __init__(self, log_mgr, channel, delay, source, measure_list):
         threading.Thread.__init__(self)
@@ -16,11 +16,17 @@ class ThreadManager(threading.Thread):
         self.measure_list = measure_list    # Riferimento alla lista misure
         self.exit_flag = False              # Flag per la terminazione del thread
 
-        self.log_mgr.info(self.__class__.__name__, "initialized for channel <" + str(self.channel) + ">")
+        self.log_mgr.info(self.__class__.__name__, "Initialized for channel <" + str(self.channel) + ">")
 
-    # Sensors reading thread
+    # Start acquisition thread
     def start_acquisition(self):
-        self.log_mgr.info(self.__class__.__name__, "started for channel <" + str(self.channel) + ">")
+        self.acq_thread = threading.Thread(target = self.acquisition_thread)
+        self.acq_thread.start()
+        self.acq_thread.join()
+
+    # Acquisition thread definition
+    def acquisition_thread(self):
+        self.log_mgr.info(self.__class__.__name__, "Started for channel <" + str(self.channel) + ">")
 
         while (self.exit_flag == False):
 
@@ -32,12 +38,13 @@ class ThreadManager(threading.Thread):
 
             time.sleep(self.delay)
 
+    # Stop acquisition thread
     def stop_acquisition (self):
-        self.log_mgr.info(self.__class__.__name__, "stopped for channel <" + str(self.channel) + ">")
+        self.log_mgr.info(self.__class__.__name__, "Stopped for channel <" + str(self.channel) + ">")
         self.exit_flag = True
 
     def stopped_acquisition(self):
-        return self.exit_flag
+        return not(self.acq_thread.isAlive)
 
     def get_channel(self):
         return self.channel

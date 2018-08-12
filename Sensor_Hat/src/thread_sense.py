@@ -64,22 +64,16 @@ class MainClass(object):
 
     def start_threads(self):
 
-        # Logging existing threads
-        for th in self.thread_list:
-            self.log_mgr.info(self.__class__.__name__, "Listing channel:<" + str(th.get_channel()) + ">")
-
         # Start threads
         for th in self.thread_list:
             self.log_mgr.info(self.__class__.__name__, "Activating channel:<" + str(th.get_channel()) + ">")
-            th.start_acquisition
-            th.start()
+            th.start_acquisition()
 
         self.log_mgr.info(self.__class__.__name__, "Starting exit mgr")
 
         # Instantiate and activate the exit manager
         self.exit_mgr = mod_exit.ExitManager(self.log_mgr, self.thread_timeout, self.thread_stop_timeout, self.thread_list)
-        self.exit_mgr.start_exit_mgr()
-        self.exit_mgr.start()
+        self.exit_mgr.start_exit_mgmt()
 
         # Wait for exit manager to complete its job
         self.exit_mgr.join()
