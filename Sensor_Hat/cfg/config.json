@@ -11,10 +11,12 @@
         }
     ],
     "channels": [
-        { "enabled": "true", "type": "analogue", "send": "false", "id": "TMP_0001", "name": "temperatura", "channel": "1", "source_channel": "1", "samp_time_ms": "500", "upper_limit": "40", "lower_limit": "-10" },
-        { "enabled": "true", "type": "analogue", "send": "false", "id": "PRS_0001", "name": "pressione", "channel": "2", "source_channel": "2", "samp_time_ms": "3000", "upper_limit": "1200", "lower_limit": "800" },
-        { "enabled": "true", "type": "average", "send": "true", "id": "TMP_AVG_0001", "name": "media minuto temperatura", "channel": "3", "source_channel": "1", "samp_time_ms": "60000", "upper_limit": "40", "lower_limit": "-10" },
-        { "enabled": "true", "type": "average", "send": "true", "id": "PRS_AVG_0001", "name": "media minuto pressione", "channel": "4", "source_channel": "2", "samp_time_ms": "60000", "upper_limit": "1200", "lower_limit": "800" }
+        { "enabled": "true", "type": "analogue", "send": "false", "id": "TMP_0001", "name": "temperature", "channel": "1", "source_channel": "1", "samp_time_ms": "500", "upper_limit": "40", "lower_limit": "-10" },
+        { "enabled": "true", "type": "analogue", "send": "false", "id": "PRS_0001", "name": "pressure", "channel": "2", "source_channel": "2", "samp_time_ms": "1500", "upper_limit": "1200", "lower_limit": "800" },
+        { "enabled": "true", "type": "analogue", "send": "false", "id": "HUM_0001", "name": "humidity", "channel": "3", "source_channel": "3", "samp_time_ms": "2000", "upper_limit": "1200", "lower_limit": "800" },
+        { "enabled": "true", "type": "average", "send": "true", "id": "TMP_AVG_0001", "name": "temp. min. avg", "channel": "4", "source_channel": "1", "samp_time_ms": "60000", "upper_limit": "40", "lower_limit": "-10" },
+        { "enabled": "true", "type": "average", "send": "true", "id": "PRS_AVG_0001", "name": "prs. min. avg", "channel": "5", "source_channel": "2", "samp_time_ms": "60000", "upper_limit": "1200", "lower_limit": "800" }
+        { "enabled": "true", "type": "average", "send": "true", "id": "HUM_AVG_0001", "name": "hum. min. avg", "channel": "6", "source_channel": "3", "samp_time_ms": "60000", "upper_limit": "1200", "lower_limit": "800" }
     ],
     "MQTT": [
         {
