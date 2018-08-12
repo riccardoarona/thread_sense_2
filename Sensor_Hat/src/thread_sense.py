@@ -44,21 +44,21 @@ class MainClass(object):
             thread_id = ch.get("id")
             channel_nr = int(ch.get("channel"))
             source_channel_nr = int(ch.get("source_channel"))
-            samp_time = int(ch.get("samp_time_ms")) / 1000
+            samp_time = float(ch.get("samp_time_ms")) / 1000
 
-            # Istanzio l'oggetto che gestisce il canale di acquisizione (fisico o calcolato)
             self.log_mgr.info(self.__class__.__name__, \
                               "Source definition - ID:<" + thread_id + ">; " + \
                               "samp_time:<" + str(samp_time) + ">; " + \
                               "channel:<" + str(channel_nr) + ">; " + \
                               "source_channel:<" + str(source_channel_nr) + ">")
 
+            # Create an instance of the acquisition manager
             if (ch.get("type") == "analogue"):
                 source = mod_sense_hat.SenseManager(self.log_mgr, int(channel_nr))
             if (ch.get("type") == "average"):
                 source = mod_average.AverageManager(self.log_mgr, self.measure_list, channel_nr, source_channel_nr)
 
-            # Istanzio il thread, fornendogli il riferimento del canale di acquisizione
+            # Create an instance of the acquisition management thread
             thd_mgr = mod_thread.ThreadManager(self.log_mgr, channel_nr, samp_time, source, self.measure_list)
             self.thread_list.append(thd_mgr)
 
@@ -68,9 +68,10 @@ class MainClass(object):
 
         # Start threads
         for th in self.thread_list:
+            self.log_mgr.info(self.__class__.__name__, "Activating channel:<" + str(th.get_channel()) + ">")
+            th.start_acquisition()
             th.start()
             th.join()
-            th.start_acquisition()
 
         self.log_mgr.info(self.__class__.__name__, "Starting exit mgr")
 

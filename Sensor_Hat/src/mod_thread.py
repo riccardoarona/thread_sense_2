@@ -39,6 +39,9 @@ class ThreadManager(threading.Thread):
     def stopped_acquisition(self):
         return self.exit_flag
 
+    def get_channel(self):
+        return self.channel
+
     # # Thread per il processamento delle misure
     # def parse_measures(self, exit_flag, measure_list):
 
