@@ -21,7 +21,6 @@ class ThreadManager(object):
     def start_acquisition(self):
         self.acq_thread = threading.Thread(target = self.acquisition_thread)
         self.acq_thread.start()
-        self.acq_thread.join()
 
     # Acquisition thread definition
     def acquisition_thread(self):
