@@ -36,19 +36,18 @@ X, X, X, X, X, X, X, X
 
 exit_flag = False
 calib_temp = None
-sense = None
 
 x = 0
 y = 0
 
 class SenseManager(object):
-    def __init__(self, channel):
-        global sense
+    def __init__(self, log_mgr, channel):
+
+        self.log_mgr = log_mgr
         self.channel = channel
-        sense = SenseHat()
+        self.sense = SenseHat()
         self.turn_off_display()
 
-        self.log_mgr = mod_log.LogManager()
         self.log_mgr.info(self.__class__.__name__, "SenseManager initialized")
 
     # Acquire single measure from single channel
@@ -58,11 +57,11 @@ class SenseManager(object):
         
         # Acquiring from SenseHat sensors: Temperature, Pressure, Humidity
         if(self.channel == 1):
-            val = sense.get_temperature()
+            val = self.sense.get_temperature()
         elif(self.channel == 2):
-            val = sense.get_pressure()
+            val = self.sense.get_pressure()
         else:
-            val = sense.get_humidity()
+            val = self.sense.get_humidity()
 
         self.light_up_pixel()
 
@@ -79,11 +78,11 @@ class SenseManager(object):
 
     # Alla pressione del pulsante del sense-hat il programma termina
     def show_green_sign(self):
-        sense.set_pixels(green_sign)
+        self.sense.set_pixels(green_sign)
 
     # Alla pressione del pulsante del sense-hat il programma termina
     def turn_off_display(self):
-        sense.set_pixels(display_off)
+        self.sense.set_pixels(display_off)
 
     def light_up_pixel (self):
 
@@ -98,7 +97,7 @@ class SenseManager(object):
             meas_color = [0, 0, 255]
 
         pix = self.next_pixel()
-        sense.set_pixel(pix[0], pix[1], meas_color)
+        self.sense.set_pixel(pix[0], pix[1], meas_color)
 
     def next_pixel(self):
 
@@ -108,7 +107,7 @@ class SenseManager(object):
 
         pix = []
 
-        while (sense.get_pixel(x, y) != X):
+        while (self.sense.get_pixel(x, y) != X):
 
             x = x + 1
 

@@ -3,12 +3,12 @@ import mod_log
 import mod_measure_list
 
 class AverageManager(object):
-    def __init__(self, measure_list, channel, source_channel):
+    def __init__(self, log_mgr, measure_list, channel, source_channel):
+        self.log_mgr = log_mgr
         self.measure_list = measure_list
         self.source_channel = source_channel
         self.channel = channel
         
-        self.log_mgr = mod_log.LogManager()
         self.log_mgr.info(self.__class__.__name__, "AverageManager initialized")
 
     # Acquire single measure from single channel

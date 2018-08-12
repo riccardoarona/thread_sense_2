@@ -54,9 +54,9 @@ class MainClass(object):
                               "source_channel:<" + str(source_channel_nr) + ">")
 
             if (ch.get("type") == "analogue"):
-                source = mod_sense_hat.SenseManager(int(channel_nr))
+                source = mod_sense_hat.SenseManager(self.log_mgr, int(channel_nr))
             if (ch.get("type") == "average"):
-                source = mod_average.AverageManager(self.measure_list, channel_nr, source_channel_nr)
+                source = mod_average.AverageManager(self.log_mgr, self.measure_list, channel_nr, source_channel_nr)
 
             # Istanzio il thread, fornendogli il riferimento del canale di acquisizione
             thd_mgr = mod_thread.ThreadManager(self.log_mgr, channel_nr, samp_time, source, self.measure_list)
