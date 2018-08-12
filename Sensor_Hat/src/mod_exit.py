@@ -40,8 +40,6 @@ class ExitManager(threading.Thread):
 
             time.sleep(self.delay)
 
-        self.stop_acquisition()
-
     def stop_acquisition (self):
         self.log_mgr.info(self.__class__.__name__, "stopping threads")
 
