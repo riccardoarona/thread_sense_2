@@ -71,7 +71,7 @@ class MainClass(object):
         # Start threads
         for th in self.thread_list:
             self.log_mgr.info(self.__class__.__name__, "Activating channel:<" + str(th.get_channel()) + ">")
-            th.start_acquisition()
+            th.start_acquisition
             th.start()
 
         self.log_mgr.info(self.__class__.__name__, "Starting exit mgr")
