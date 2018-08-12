@@ -7,15 +7,15 @@ import mod_sense_hat
 # Threads management class
 class ThreadManager(threading.Thread):
 
-    def __init__(self, channel, delay, source, measure_list):
+    def __init__(self, log_mgr, channel, delay, source, measure_list):
         threading.Thread.__init__(self)
+        self.log_mgr = log_mgr              # Logger module
         self.channel = channel              # Canale di acquisizione
         self.delay = delay                  # Tempo di acquisizione in ms.
         self.source = source                # Modalita' di acquisizione
         self.measure_list = measure_list    # Riferimento alla lista misure
         self.exit_flag = False              # Flag per la terminazione del thread
 
-        self.log_mgr = mod_log.LogManager()
         self.log_mgr.info(self.__class__.__name__, "initialized for channel <" + str(self.channel) + ">")
 
     # Sensors reading thread

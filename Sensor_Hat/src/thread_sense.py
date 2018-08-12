@@ -27,7 +27,9 @@ class MainClass(object):
 
         self.thread_timeout = int(self.cfg_mgr.get_exit_params()[0].get("thread_timeout_ms", 10000)) / 1000
         self.thread_stop_timeout = int(self.cfg_mgr.get_exit_params()[0].get("thread_stop_timeout_ms", 10000)) / 1000
-        self.log_mgr.info(self.__class__.__name__, "Thread params - thread_timeout:<" + str(self.thread_timeout) + ">; thread_stop_timeout:<" + str(self.thread_stop_timeout) + ">")
+        self.log_mgr.info(self.__class__.__name__, \
+                        "Thread params - thread_timeout:<" + str(self.thread_timeout) + ">; " + \
+                        "thread_stop_timeout:<" + str(self.thread_stop_timeout) + ">")
 
 
     def setup_threads(self):
@@ -39,17 +41,25 @@ class MainClass(object):
 
         for ch in self.channel_list:
 
+            thread_id = ch.get("id")
+            channel_nr = int(ch.get("channel"))
+            source_channel_nr = int(ch.get("source_channel"))
+            samp_time = int(ch.get("samp_time_ms")) / 1000
+
             # Istanzio l'oggetto che gestisce il canale di acquisizione (fisico o calcolato)
-            self.log_mgr.info(self.__class__.__name__, "Source definition - ID:<" + str(ch.get("id")) + ">; channel:<" + str(ch.get("channel")) + ">; source_channel:<" + str(ch.get("source_channel")) + ">")
+            self.log_mgr.info(self.__class__.__name__, \
+                              "Source definition - ID:<" + thread_id + ">; " + \
+                              "samp_time:<" + str(samp_time) + ">; " + \
+                              "channel:<" + str(channel_nr) + ">; " + \
+                              "source_channel:<" + str(source_channel_nr) + ">")
+
             if (ch.get("type") == "analogue"):
-                source = mod_sense_hat.SenseManager(int(ch.get("channel")))
+                source = mod_sense_hat.SenseManager(int(channel_nr))
             if (ch.get("type") == "average"):
-                source = mod_average.AverageManager(self.measure_list, int(ch.get("channel")), int(ch.get("source_channel")))
+                source = mod_average.AverageManager(self.measure_list, channel_nr, source_channel_nr)
 
             # Istanzio il thread, fornendogli il riferimento del canale di acquisizione
-            samp_time = int(ch.get("samp_time_ms")) / 1000
-            self.log_mgr.info(self.__class__.__name__, "Thread start - ID:<" + str(ch.get("id")) + ">")
-            thd_mgr = mod_thread.ThreadManager(int(ch.get("channel")), samp_time, source, self.measure_list)
+            thd_mgr = mod_thread.ThreadManager(self.log_mgr, channel_nr, samp_time, source, self.measure_list)
             self.thread_list.append(thd_mgr)
 
     def start_threads(self):
