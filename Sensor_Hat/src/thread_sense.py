@@ -25,8 +25,8 @@ class MainClass(object):
         self.cfg_mgr.load_config()
         self.channel_list = self.cfg_mgr.get_channel_list()
 
-        self.thread_timeout = int(self.cfg_mgr.get_exit_params()[0].get("thread_timeout_ms", 10000)) / 1000
-        self.thread_stop_timeout = int(self.cfg_mgr.get_exit_params()[0].get("thread_stop_timeout_ms", 10000)) / 1000
+        self.thread_timeout = float(self.cfg_mgr.get_exit_params()[0].get("thread_timeout_ms", 10000)) / 1000
+        self.thread_stop_timeout = float(self.cfg_mgr.get_exit_params()[0].get("thread_stop_timeout_ms", 10000)) / 1000
         self.log_mgr.info(self.__class__.__name__, \
                         "Thread params - thread_timeout:<" + str(self.thread_timeout) + ">; " + \
                         "thread_stop_timeout:<" + str(self.thread_stop_timeout) + ">")
@@ -64,7 +64,9 @@ class MainClass(object):
 
     def start_threads(self):
 
-        self.log_mgr.info(self.__class__.__name__, "Starting threads")
+        # Logging existing threads
+        for th in self.thread_list:
+            self.log_mgr.info(self.__class__.__name__, "Listing channel:<" + str(th.get_channel()) + ">")
 
         # Start threads
         for th in self.thread_list:
@@ -75,7 +77,7 @@ class MainClass(object):
         self.log_mgr.info(self.__class__.__name__, "Starting exit mgr")
 
         # Instantiate and activate the exit manager
-        self.exit_mgr = mod_exit.ExitManager(self.thread_timeout, self.thread_stop_timeout, self.thread_list)
+        self.exit_mgr = mod_exit.ExitManager(self.log_mgr, self.thread_timeout, self.thread_stop_timeout, self.thread_list)
         self.exit_mgr.start_exit_mgr()
         self.exit_mgr.start()
 

@@ -10,16 +10,17 @@ sense = None
 # Threads management class
 class ExitManager(threading.Thread):
 
-    def __init__(self, delay, close_timeout, thread_list):
+    def __init__(self, log_mgr, delay, close_timeout, thread_list):
         global sense
         threading.Thread.__init__(self)
+        self.log_mgr = log_mgr
+
         self.thread_list = thread_list      # Data acquisition thread list
         self.close_timeout = close_timeout  # Timeout for threads closeup
         self.delay = delay                  # Tempo di acquisizione in ms.
         self.exit_flag = False              # Threads termination flag
         sense = SenseHat()
 
-        self.log_mgr = mod_log.LogManager()
         self.log_mgr.info(self.__class__.__name__, "initialized")
 
     # Sensors reading thread
