@@ -71,15 +71,16 @@ class MainClass(object):
             self.log_mgr.info(self.__class__.__name__, "Activating channel:<" + str(th.get_channel()) + ">")
             th.start_acquisition()
             th.start()
-            th.join()
 
         self.log_mgr.info(self.__class__.__name__, "Starting exit mgr")
 
         # Instantiate and activate the exit manager
         self.exit_mgr = mod_exit.ExitManager(self.thread_timeout, self.thread_stop_timeout, self.thread_list)
-        self.exit_mgr.start()
-        self.exit_mgr.join()
         self.exit_mgr.start_exit_mgr()
+        self.exit_mgr.start()
+
+        # Wait for exit manager to complete its job
+        self.exit_mgr.join()
 
 main = MainClass()
 main.setup_threads()
