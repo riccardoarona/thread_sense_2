@@ -32,7 +32,7 @@ class ConfigManager(object):
         self.log_mgr = log_mgr
         self.config = None
         self.cd = ConfigDefaults()
-        self.vc = ValidateConfig
+        self.vc = ValidateConfig()
 
     def load_config(self):
 
@@ -91,7 +91,6 @@ class ConfigManager(object):
         self.log_mgr.info(self.__class__.__name__, "Saving config:<" + str(cfg_name) + "> to JSON:<" + str(config_check_f) + ">")
         with open(config_check_f, 'w') as f:
             json.dumps(cfg, f)
-            f.close()
 
     # Sorting configurtion dictionary elements
     # https://stackoverflow.com/questions/25851183/how-to-compare-two-json-objects-with-the-same-elements-in-a-different-order-equa
